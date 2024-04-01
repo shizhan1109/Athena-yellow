@@ -15,7 +15,7 @@
 # Copyright (c) 2010,2011 Roger Light <roger@atchoo.org>
 # All rights reserved.
 
-# This shows a simple example of an MQTT subscriber.
+# This shows a simple example of waiting for a message to be published.
 
 import context  # Ensures paho is in PYTHONPATH
 
@@ -30,8 +30,8 @@ def on_message(mqttc, obj, msg):
     print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 
-def on_subscribe(mqttc, obj, mid, reason_code_list, properties):
-    print("Subscribed: " + str(mid) + " " + str(reason_code_list))
+def on_publish(mqttc, obj, mid, reason_code, properties):
+    print("mid: " + str(mid))
 
 
 def on_log(mqttc, obj, level, string):
@@ -45,10 +45,16 @@ def on_log(mqttc, obj, level, string):
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
-mqttc.on_subscribe = on_subscribe
+mqttc.on_publish = on_publish
 # Uncomment to enable debug messages
 # mqttc.on_log = on_log
 mqttc.connect("mqtt.eclipseprojects.io", 1883, 60)
-mqttc.subscribe("zhan")
 
-mqttc.loop_forever()
+mqttc.loop_start()
+
+print("tuple")
+(rc, mid) = mqttc.publish("tuple", "bar", qos=2)
+print("class")
+infot = mqttc.publish("class", "bar", qos=2)
+
+infot.wait_for_publish()
