@@ -31,3 +31,20 @@ Zhan Shi:
 Huantao Li:
 
 Our Team photo:
+
+
+
+
+
+## logging
+
+<https://docs.zephyrproject.org/latest/boards/m5stack/m5stack_core2/doc/index.html>
+
+west build -b m5stack_core2/esp32/procpu zephyr/samples/hello_world -p
+
+west config build.board m5stack_core2/esp32/procpu
+west build zephyr/samples/hello_world
+west build zephyr/samples/subsys/display/lvgl
+west build zephyr/samples/sensor/mpu6050 -- -DSHIELD=m5stack_core2_ext
+
+
