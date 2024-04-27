@@ -49,3 +49,6 @@ west build zephyr/samples/sensor/mpu6050 -- -DSHIELD=m5stack_core2_ext
 west build Athena-yellow/m5
 
 west espressif monitor
+
+examples
+modules/lib/gui/lvgl/examples/widgets/img/lv_example_img_1.c
