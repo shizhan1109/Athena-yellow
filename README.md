@@ -53,3 +53,5 @@ west espressif monitor
 
 examples
 modules/lib/gui/lvgl/examples/widgets/img/lv_example_img_1.c
+
+LCD IPS TFT 2”, 320x240 px screen (ILI9342C)
