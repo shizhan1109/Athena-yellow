@@ -20,97 +20,45 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app);
 
-// static void anim_x_cb(void * var, int32_t v)
-// {
-//     lv_obj_set_x(var, v);
-// }
 
-// static void sw_event_cb(lv_event_t * e)
-// {
-//     lv_obj_t * sw = lv_event_get_target(e);
-//     lv_obj_t * label = lv_event_get_user_data(e);
+static void set_angle(void * img, int32_t v)
+{
+    lv_img_set_angle(img, v);
+}
 
-//     if(lv_obj_has_state(sw, LV_STATE_CHECKED)) {
-//         lv_anim_t a;
-//         lv_anim_init(&a);
-//         lv_anim_set_var(&a, label);
-//         lv_anim_set_values(&a, lv_obj_get_x(label), 100);
-//         lv_anim_set_time(&a, 500);
-//         lv_anim_set_exec_cb(&a, anim_x_cb);
-//         lv_anim_set_path_cb(&a, lv_anim_path_overshoot);
-//         lv_anim_start(&a);
-//     }
-//     else {
-//         lv_anim_t a;
-//         lv_anim_init(&a);
-//         lv_anim_set_var(&a, label);
-//         lv_anim_set_values(&a, lv_obj_get_x(label), -lv_obj_get_width(label));
-//         lv_anim_set_time(&a, 500);
-//         lv_anim_set_exec_cb(&a, anim_x_cb);
-//         lv_anim_set_path_cb(&a, lv_anim_path_ease_in);
-//         lv_anim_start(&a);
-//     }
-
-// }
-
-// /**
-//  * Start animation on an event
-//  */
-// void lv_example_anim_1(void)
-// {
-//     lv_obj_t * label = lv_label_create(lv_scr_act());
-//     lv_label_set_text(label, "Hello animations!");
-//     lv_obj_set_pos(label, 100, 10);
+static void set_zoom(void * img, int32_t v)
+{
+    lv_img_set_zoom(img, v);
+}
 
 
-//     lv_obj_t * sw = lv_switch_create(lv_scr_act());
-//     lv_obj_center(sw);
-//     lv_obj_add_state(sw, LV_STATE_CHECKED);
-//     lv_obj_add_event_cb(sw, sw_event_cb, LV_EVENT_VALUE_CHANGED, label);
-// }
+/**
+ * Show transformations (zoom and rotation) using a pivot point.
+ */
+void lv_example_img_3(void)
+{
+    LV_IMG_DECLARE(img_cogwheel_argb);
 
+    /*Now create the actual image*/
+    lv_obj_t * img = lv_img_create(lv_scr_act());
+    lv_img_set_src(img, &img_cogwheel_argb);
+    lv_obj_align(img, LV_ALIGN_CENTER, 50, 50);
+    lv_img_set_pivot(img, 0, 0);    /*Rotate around the top left corner*/
 
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, img);
+    lv_anim_set_exec_cb(&a, set_angle);
+    lv_anim_set_values(&a, 0, 3600);
+    lv_anim_set_time(&a, 5000);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_start(&a);
 
-// static void anim_x_cb(void * var, int32_t v)
-// {
-//     lv_obj_set_x(var, v);
-// }
-
-// static void anim_size_cb(void * var, int32_t v)
-// {
-//     lv_obj_set_size(var, v, v);
-// }
-
-// /**
-//  * Create a playback animation
-//  */
-// void lv_example_anim_2(void)
-// {
-
-//     lv_obj_t * obj = lv_obj_create(lv_scr_act());
-//     lv_obj_set_style_bg_color(obj, lv_palette_main(LV_PALETTE_RED), 0);
-//     lv_obj_set_style_radius(obj, LV_RADIUS_CIRCLE, 0);
-
-//     lv_obj_align(obj, LV_ALIGN_LEFT_MID, 10, 0);
-
-//     lv_anim_t a;
-//     lv_anim_init(&a);
-//     lv_anim_set_var(&a, obj);
-//     lv_anim_set_values(&a, 10, 50);
-//     lv_anim_set_time(&a, 1000);
-//     lv_anim_set_playback_delay(&a, 100);
-//     lv_anim_set_playback_time(&a, 300);
-//     lv_anim_set_repeat_delay(&a, 500);
-//     lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
-//     lv_anim_set_path_cb(&a, lv_anim_path_ease_in_out);
-
-//     lv_anim_set_exec_cb(&a, anim_size_cb);
-//     lv_anim_start(&a);
-//     lv_anim_set_exec_cb(&a, anim_x_cb);
-//     lv_anim_set_values(&a, 10, 240);
-//     lv_anim_start(&a);
-// }
-
+    lv_anim_set_exec_cb(&a, set_zoom);
+    lv_anim_set_values(&a, 128, 256);
+    lv_anim_set_playback_time(&a, 3000);
+    lv_anim_start(&a);
+}
 int main(void)
 {
 	const struct device *display_dev;
@@ -128,7 +76,7 @@ int main(void)
 	lv_obj_set_style_bg_color(screen, lv_color_make(128, 222, 111), LV_PART_MAIN);
 
 	// Add widget here
-	lv_example_anim_3();
+	lv_example_img_3();
 
 	// refreshing screen
 	lv_task_handler();
