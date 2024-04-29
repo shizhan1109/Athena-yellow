@@ -15,7 +15,7 @@ This is our timeline.
 
 
 ## KPIs
-- At least one sensor. Shaking on, shaking off. Fast screen switch.
+- MotionTracking sensor. Shaking on, shaking off. A fast way to switch on and off screen.
 - At least one actuator. Resolution, latency.
 - Use non-trivial wireless networking. MQTT trans image.
 - Auto wifi connecting, no password needed even for a encrypt wifi.
