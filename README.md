@@ -16,7 +16,7 @@ This is our timeline.
 
 ## KPIs
 - At least one sensor. Shaking on, shaking off. Fast screen switch.
-- At least one actuator. Resolution, latency.
+- performance. Resolution, latency.
 - Use non-trivial wireless networking. MQTT trans image.
 - Auto wifi connecting, no password needed even for a encrypt wifi.
 - Use of a web dashboard. Using tool Streamlit. Sync image on websit.
