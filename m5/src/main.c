@@ -13,11 +13,52 @@
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <lvgl_input_device.h>
+#include "lv_example_anim_3.h"
+
 
 #define LOG_LEVEL CONFIG_LOG_DEFAULT_LEVEL
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(app);
 
+
+static void set_angle(void * img, int32_t v)
+{
+    lv_img_set_angle(img, v);
+}
+
+static void set_zoom(void * img, int32_t v)
+{
+    lv_img_set_zoom(img, v);
+}
+
+
+/**
+ * Show transformations (zoom and rotation) using a pivot point.
+ */
+void lv_example_img_3(void)
+{
+    LV_IMG_DECLARE(pineapple2);
+
+    /*Now create the actual image*/
+    lv_obj_t * img = lv_img_create(lv_scr_act());
+    lv_img_set_src(img, &pineapple2);
+    lv_obj_align(img, LV_ALIGN_CENTER, 50, 50);
+    lv_img_set_pivot(img, 0, 0);    /*Rotate around the top left corner*/
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, img);
+    lv_anim_set_exec_cb(&a, set_angle);
+    lv_anim_set_values(&a, 0, 3600);
+    lv_anim_set_time(&a, 5000);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_start(&a);
+
+    lv_anim_set_exec_cb(&a, set_zoom);
+    lv_anim_set_values(&a, 128, 256);
+    lv_anim_set_playback_time(&a, 3000);
+    lv_anim_start(&a);
+}
 int main(void)
 {
 	const struct device *display_dev;
@@ -35,6 +76,7 @@ int main(void)
 	lv_obj_set_style_bg_color(screen, lv_color_make(128, 222, 111), LV_PART_MAIN);
 
 	// Add widget here
+	lv_example_img_3();
 
 	// refreshing screen
 	lv_task_handler();
@@ -44,34 +86,4 @@ int main(void)
 		lv_task_handler();
 		k_sleep(K_MSEC(10));
 	}
-}
-
-void create_hello_world_button(void)
-{
-	lv_obj_t *hello_world_button;
-	lv_obj_t *hello_world_label;
-	// Create button
-	hello_world_button = lv_btn_create(lv_scr_act());
-	lv_obj_align(hello_world_button, LV_ALIGN_CENTER, 0, -15);
-	lv_obj_add_event_cb(hello_world_button, NULL, LV_EVENT_CLICKED,
-						NULL);
-	// Create label within button
-	hello_world_label = lv_label_create(hello_world_button);
-	lv_label_set_text(hello_world_label, "Hello world!");
-	lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
-}
-
-void create_slider(void)
-{
-	/*Create a slider in the center of the display*/
-	lv_obj_t *slider = lv_slider_create(lv_scr_act());
-	lv_obj_t *label;
-	lv_obj_set_width(slider, 200);									 /*Set the width*/
-	lv_obj_center(slider);											 /*Align to the center of the parent (screen)*/
-	lv_obj_add_event_cb(slider, NULL, LV_EVENT_VALUE_CHANGED, NULL); /*Assign an event function*/
-
-	/*Create a label above the slider*/
-	label = lv_label_create(lv_scr_act());
-	lv_label_set_text(label, "0");
-	lv_obj_align_to(label, slider, LV_ALIGN_OUT_TOP_MID, 0, -15); /*Align top of the slider*/
 }

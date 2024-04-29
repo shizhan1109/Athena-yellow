@@ -15,6 +15,8 @@ This is our timeline.
 
 
 ## KPIs
+- At least one sensor. Shaking on, shaking off. Fast screen switch.
+- performance. Resolution, latency.
 - MotionTracking sensor. Shaking on, shaking off. A fast way to switch on and off screen.
 - At least one actuator. Resolution, latency.
 - Use non-trivial wireless networking. MQTT trans image.
@@ -49,3 +51,6 @@ west build zephyr/samples/sensor/mpu6050 -- -DSHIELD=m5stack_core2_ext
 west build Athena-yellow/m5
 
 west espressif monitor
+
+examples
+modules/lib/gui/lvgl/examples/widgets/img/lv_example_img_1.c
