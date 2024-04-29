@@ -15,14 +15,13 @@ This is our timeline.
 
 
 ## KPIs
-- At least one sensor. Shaking on, shaking off. Fast screen switch.
-- performance. Resolution, latency.
-- MotionTracking sensor. Shaking on, shaking off. A fast way to switch on and off screen.
-- At least one actuator. Resolution, latency.
-- Use non-trivial wireless networking. MQTT trans image.
-- Auto wifi connecting, no password needed even for a encrypt wifi.
-- Use of a web dashboard. Using tool Streamlit. Sync image on websit.
-- Computer vision, image processing like beuring, filtering.
+
+- **MotionTracking sensor**. Shaking on, shaking off. A fast way to switch on and off screen.
+- **Performance**. High resolution, 960x720 pixels, and low display latency.
+- **Apply MQTT**. Translate image from website to displays through MQTT.
+- **Auto wifi connecting**. Connect wifi without inputting password,even for a encrypt wifi.
+- **Fancy web dashboard**. Using tool Streamlit. Synchronize with uploaded image from websit.
+- **Computer vision**. Integrate image processing technic like image filtering and edge detection.
 
 
 
