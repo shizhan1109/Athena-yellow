@@ -1,12 +1,9 @@
-import streamlit as st
-from PIL import Image, ImageGrab
-import time
-from multiprocessing import Process, Queue
 import socket
 import time
 import cv2
 import os
 import numpy as np
+from PIL import Image, ImageGrab
 
 def resize_with_padding(img, target_size=(320, 240), background_color=(0, 0, 0)):
     # 计算目标宽高比和原始宽高比
@@ -77,72 +74,49 @@ def send_image(tcp_client, quality=70):
     image_data = image_data + b'\xAA\xBB\xCC'
     tcp_client.sendall(image_data)
 
-def run_server():
+class ImageServer:
+    def __init__(self, server_ip, port):
+        self.server_ip = server_ip
+        self.port = port
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    def start(self, quality=70):
+        self.server_socket.bind((self.server_ip, self.port))
+        self.server_socket.listen(1)
+        print(f"Listening on {self.server_ip}:{self.port}")
+
+        # 等待设备连接
+        client_socket, addr = self.server_socket.accept()
+        print(f"Connected by {addr}")
+
+        try:
+            # 循环发送图片数据
+            while True:
+                t0 = time.time()
+                response = client_socket.recv(2)
+                if response == b'ok':
+                    send_image(client_socket, quality)
+                else:
+                    print("Unrecognized response, stopping...")
+                    break
+                t1 = time.time()
+                fps = 1 / (t1 - t0)
+                print(f"FPS: {fps:.2f}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            client_socket.close()
+            self.server_socket.close()
+
+
+def main():
+    # 服务器IP和端口配置
     server_ip = '192.168.31.86'
     port = 40111
 
-    server_ip = server_ip
-    port = port
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # 创建ImageServer实例
+    server = ImageServer(server_ip, port)
+    server.start(quality=70)
 
-    server_socket.bind((server_ip, port))
-    server_socket.listen(1)
-    print(f"Listening on {server_ip}:{port}")
-
-    # 等待设备连接
-    client_socket, addr = server_socket.accept()
-    print(f"Connected by {addr}")
-
-    try:
-        # 循环发送图片数据
-        while True:
-            t0 = time.time()
-            response = client_socket.recv(2)
-            if response == b'ok':
-                send_image(client_socket, 70)
-            else:
-                print("Unrecognized response, stopping...")
-                break
-            t1 = time.time()
-            fps = 1 / (t1 - t0)
-            print(f"FPS: {fps:.2f}")
-            # conn.put(fps)
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    finally:
-        client_socket.close()
-        server_socket.close()
-
-def capture_screen():
-    st.set_page_config(
-        page_title="CSSE4011 ATHENA - YELLOW TEAM",
-        page_icon="🖥️",
-    )
-    st.sidebar.header("ATHENA - YELLOW")
-    st.write("# CSSE4011 ATHENA - YELLOW TEAM")
-
-    placeholder = st.empty()  # 创建一个空的占位符
-
-    while True:
-        screen = ImageGrab.grab()  # 获取当前屏幕截图
-        placeholder.image(screen, caption="Current Screen")
-        # fps = conn.get()
-        # placeholder.text(f"FPS: {fps:.2f}")
-        time.sleep(0.1)  # 设定刷新频率
-
-def run():
-    fps_queue = Queue()
-    # 创建并启动服务器进程
-    server_process = Process(target=run_server)
-    # capture_process = Process(target=capture_screen)
-
-    server_process.start()
-    # capture_process.start()
-
-    # server_process.join()
-    # capture_process.join()
-
-    capture_screen()
-
-if __name__ == "__main__":
-    run()
+if __name__ == '__main__':
+    main()
