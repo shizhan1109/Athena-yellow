@@ -9,7 +9,7 @@ This is our timeline.
 | time   | progress                           |
 | ------ | ---------------------------------- |
 | week9  | show image,   auto wifi connecting |
-| week10 | Data                               |
+| week10 | MQTT ip addr, TCP trans one display sever, TCP trans one display client, display sjpg, show ip ,connect wifi    |
 | week11 | Data                               |
 | week12 | Data                               |
 
