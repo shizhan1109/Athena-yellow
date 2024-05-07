@@ -68,5 +68,5 @@ bt adv-create conn-scan
 *csse4011demo-csse4011*
 bt adv-data 1609637373653430313164656d6f2d6373736534303131
 bt adv-start
-*60:DA:91:92:B0:DA*
-
+*D8:16:AD:C5:7D:29*
+bt id-create D8:16:AD:C5:7D:29
