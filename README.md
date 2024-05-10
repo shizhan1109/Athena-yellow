@@ -57,12 +57,10 @@ modules/lib/gui/lvgl/examples/widgets/img/lv_example_img_1.c
 LCD IPS TFT 2”, 320x240 px screen (ILI9342C)
 
 ### blue
-west build -b thingy52/nrf52832 prac2/thingy --pristine
 west build Athena-yellow/blue --pristine
 west build zephyr/tests/bluetooth/shell --pristine
 
 minicom -c on -D /dev/ttyACM0
-
 
 bt adv-create conn-scan
 *csse4011demo-csse4011*
@@ -70,3 +68,5 @@ bt adv-data 1609637373653430313164656d6f2d6373736534303131
 bt adv-start
 *D8:16:AD:C5:7D:29*
 bt id-create D8:16:AD:C5:7D:29
+
+
