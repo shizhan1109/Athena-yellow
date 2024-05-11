@@ -62,11 +62,18 @@ west build zephyr/tests/bluetooth/shell --pristine
 
 minicom -c on -D /dev/ttyACM0
 
-bt adv-create conn-scan
+set once
+*D8:16:AD:C5:7D:29*
+bt id-create D8:16:AD:C5:7D:29
+bt id-show
+
+bt adv-create conn-scan identity
+bt adv-info
 *csse4011demo-csse4011*
 bt adv-data 1609637373653430313164656d6f2d6373736534303131
 bt adv-start
-*D8:16:AD:C5:7D:29*
-bt id-create D8:16:AD:C5:7D:29
+
+`wifi csse4011demo-csse4011`
 
 
+rm -rf ~/cheese/Athena-yellow/.git;cp -r ~/Documents/Athena-yellow/.git ~/cheese/Athena-yellow/

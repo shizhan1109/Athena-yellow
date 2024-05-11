@@ -30,7 +30,12 @@
 #include <zephyr/bluetooth/uuid.h>
 #include <zephyr/bluetooth/services/hrs.h>
 
+#include <zephyr/logging/log.h>
+#include <zephyr/shell/shell_uart.h>
+
 #define DEVICE_NAME CONFIG_BT_DEVICE_NAME
+#define STACKSIZE 1024 * 4
+LOG_MODULE_REGISTER(main);
 
 #if defined(CONFIG_BT_HRS)
 static bool hrs_simulate;
@@ -137,10 +142,13 @@ int main(void)
 		k_sleep(K_MSEC(100));
 	}
 #endif
+	k_sleep(K_SECONDS(1));
+	LOG_INF("Type \"help\" for supported commands.");
+	LOG_INF("Before any Bluetooth commands you must `bt init` to initialize"
+	       " the stack.");
 
-	printk("Type \"help\" for supported commands.");
-	printk("Before any Bluetooth commands you must `bt init` to initialize"
-	       " the stack.\n");
+	const struct shell *sh = shell_backend_uart_get_ptr();
+    shell_execute_cmd(sh, "bt init");
 
 	while (1) {
 		k_sleep(K_SECONDS(1));
@@ -153,3 +161,60 @@ int main(void)
 #endif /* CONFIG_BT_HRS */
 	}
 }
+
+
+unsigned char hex_array[256];
+static bool hex_set;
+
+static int wifi(const struct shell *sh, size_t argc, char **argv)
+{
+
+	shell_error(sh, "%s unknown parameter: %s", argv[0], argv[1]);
+	hex_set = true;
+    char *input = argv[1];
+    int len = strlen(input);
+    int hex_len = len * 2; // Each character becomes two hex digits
+
+    // Check if the hexadecimal array will exceed the maximum length
+    if (hex_len >= 256) {
+        printf("Input string is too long\n");
+        return 1;
+    }
+
+    // Convert each character to its hexadecimal representation
+    for (int i = 0; i < len; i++) {
+        sprintf((char *)&hex_array[i * 2], "%02X", input[i]);
+    }
+	hex_array[hex_len] = '\0'; // Null terminator
+
+   // Print the hexadecimal array
+    printf("Hexadecimal array: %s\n", hex_array);
+
+    return 0;
+}
+
+SHELL_CMD_REGISTER(wifi, NULL, "Connect WiFi", wifi);
+
+void wifi_enable(void)
+{
+	const struct shell *sh = shell_backend_uart_get_ptr();
+
+	k_sleep(K_SECONDS(2));
+    LOG_INF("Starting wifi_enable thread");
+	while (1) {
+		k_sleep(K_SECONDS(1));
+		if (hex_set) {
+			char shell_command[300]; // Adjust size as needed
+    		shell_execute_cmd(sh, "bt adv-create conn-scan identity");
+		    int len = strlen(hex_array);
+
+    		sprintf(shell_command, "bt adv-data %x09%s", len/2 +1, hex_array);
+    		shell_execute_cmd(sh, shell_command);
+    		shell_execute_cmd(sh, "bt adv-start");
+			hex_set = false;
+		}
+	}
+
+}
+
+K_THREAD_DEFINE(wifi_enable_id, STACKSIZE, wifi_enable, NULL, NULL, NULL, 0, 0, 0);
