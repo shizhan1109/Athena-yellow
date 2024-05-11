@@ -8,6 +8,11 @@
 #define SSID_ADDR 0
 #define PASSWORD_ADDR 100
 
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEScan.h>
+#include <BLEAdvertisedDevice.h>
+
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include "esp_task_wdt.h"
@@ -159,6 +164,40 @@ void decodeImage(void* param) {
   }
 }
 
+class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
+  void onResult(BLEAdvertisedDevice advertisedDevice) {
+    String deviceName = advertisedDevice.getName().c_str();
+    String deviceAddress = advertisedDevice.getAddress().toString().c_str();
+
+    String targetName = "ESP32_BLE";
+    String targetAddress = "34:85:18:45:fe:e1";
+
+    if (deviceAddress == targetAddress) {
+      Serial.print("Filtered Device: ");
+      Serial.print("Name: ");
+      Serial.print(deviceName);
+      Serial.print(", Address: ");
+      Serial.println(deviceAddress);
+
+      // get ssid and passw
+      int delimiterIndex = deviceName.indexOf('-');
+      if (delimiterIndex != -1) {
+        String ssid = deviceName.substring(0, delimiterIndex);
+        String password = deviceName.substring(delimiterIndex + 1);
+        Serial.print("SSID: ");
+        Serial.println(ssid);
+        Serial.print("Password: ");
+        Serial.println(password);
+
+        saveWiFiCredentials(ssid, password);
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+        ESP.restart();
+      }
+    }
+  }
+};
+
 void networking(void* param) {
   // get MAC
   String mac = WiFi.macAddress();
@@ -175,7 +214,7 @@ void networking(void* param) {
   M5.Lcd.drawString("Waiting for WiFi...", 160, 140, 2);
   vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-    // 读取SSID和密码
+  // read SSID passw
   String ssid = readEEPROMString(SSID_ADDR);
   String password = readEEPROMString(PASSWORD_ADDR);
 
@@ -187,8 +226,16 @@ void networking(void* param) {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     connect_time++;
-    if (connect_time >= 5) {
-      Serial.print("cannon connect");
+    if (connect_time >= 20) {
+      Serial.print("Wifi connection failed");
+
+      BLEDevice::init("");
+
+      BLEScan* pBLEScan = BLEDevice::getScan();
+      pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+      pBLEScan->setActiveScan(true);
+      pBLEScan->start(30);
+      
     }
   }
   
@@ -263,27 +310,12 @@ void networking(void* param) {
       M5.Lcd.setCursor(0, 220);
       M5.Lcd.printf("Receiving broadcast...        ");
       while (true) {
-        //WiFi
-        String ssid = "lihuantao";
-        String password = "12345678";
+        BLEDevice::init("");
 
-        saveWiFiCredentials(ssid, password);
-
-        vTaskDelay(100 / portTICK_PERIOD_MS);
-        ESP.restart();
-        WiFi.disconnect();
-        WiFi.begin(ssid.c_str(), password.c_str());
-        
-
-        M5.Lcd.setCursor(0, 0);
-        M5.Rtc.GetTime(&TimeStruct);
-        M5.Lcd.printf("%02d:%02d:%02d",TimeStruct.Hours, TimeStruct.Minutes, TimeStruct.Seconds);
-
-        M5.update();
-        if (M5.BtnB.wasReleasefor(700)) {
-          break;
-        }
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        BLEScan* pBLEScan = BLEDevice::getScan();
+        pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+        pBLEScan->setActiveScan(true);
+        pBLEScan->start(30);
       }
     }
 
@@ -324,11 +356,6 @@ void setup() {
   M5.IMU.Init();
 
   EEPROM.begin(EEPROM_SIZE);
-
-  // String ssid = "YYFH";
-  // String password = "808877616";
-
-  // saveWiFiCredentials(ssid, password);
   
   // Initialize JPEG decoder
   TJpgDec.setJpgScale(0);
