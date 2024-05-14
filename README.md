@@ -2,7 +2,13 @@
 
 We are team Athena‐yellow!
 
+Our wiki <https://github.com/shizhan1109/Athena-yellow/wiki/Index>
+
 Our team members: Zhan Shi, Huantao Li
+
+48323626, Zhan Shi 
+
+46435244, Huantao Li
 
 This is our timeline.
 
@@ -13,6 +19,11 @@ This is our timeline.
 | week11 | Data                               |
 | week12 | Data                               |
 
+## Devices
+
+- 9 m5stack core2
+- 1 nRF52840 DK(blue board)
+- 1 server on PC
 
 ## KPIs
 
@@ -22,6 +33,20 @@ This is our timeline.
 - **Auto wifi connecting**. Connect wifi without inputting password,even for a encrypt wifi.
 - **Fancy web dashboard**. Using tool Streamlit. Synchronize with uploaded image from websit.
 - **Computer vision**. Integrate image processing technic like image filtering and edge detection.
+
+
+## DIKW
+
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/d1e2cfdc-3a25-4ee8-a864-81aba5bf2205)
+
+## Overview
+
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/896ab853-748d-4559-9e94-0acbfc30b3e0)
+
+## Network
+
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/d0887cef-a5d9-4bf3-aaae-53077e5ac711)
+
 
 
 
