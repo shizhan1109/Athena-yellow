@@ -8,8 +8,8 @@ void setup() {
     Serial.println("Starting BLE work!");
 
     // 初始化BLE设备
-    BLEDevice::init("lihuantao-12345678");
-    // BLEDevice::init("YYFH-808877616");
+    // BLEDevice::init("lihuantao-12345678");
+    BLEDevice::init("YYFH-808877616");
 
     // 创建BLE服务器
     BLEServer *pServer = BLEDevice::createServer();

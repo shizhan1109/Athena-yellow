@@ -20,8 +20,6 @@
 // #define MY_DEBUG
 #define TIMEOUT_DURATION 2000
 
-const char* default_ssid = "YYFH";
-const char* default_password = "808877616";
 const int serverPort = 40111;  // Server port to listen on
 
 // save wifi
@@ -61,12 +59,14 @@ void writeEEPROMString(int addr, const String &value) {
   EEPROM.commit();
 }
 
+// save wifi credentials
 void saveWiFiCredentials(const String &ssid, const String &password) {
   writeEEPROMString(SSID_ADDR, ssid);
   writeEEPROMString(PASSWORD_ADDR, password);
   Serial.println("WiFi credentials saved to EEPROM.");
 }
 
+// connect to NTP service
 void update_time() {
   // NTP RTC
   const char* ntpServer = "pool.ntp.org";
@@ -94,13 +94,15 @@ void update_time() {
   M5.Rtc.SetDate(&DateStruct);
 }
 
+// decode jpg and display
 bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* bitmap) {
-  if ( y >= M5.Lcd.height() ) return 0;
-  esp_task_wdt_reset();
+  if (!bitmap || y >= M5.Lcd.height()) return 0;
+  // esp_task_wdt_reset();
   M5.Lcd.drawBitmap(x, y, w, h, bitmap);
   return 1;  // Continue decoding
 }
 
+// get and decode jpg
 void decodeImage(void* param) {
   WiFiServer server(serverPort);  // Initialize the server on the specified port
   WiFiClient client;
@@ -130,12 +132,18 @@ void decodeImage(void* param) {
     }
 
     // Handle incoming data if the client is connected
-    if (client.connected()) {
+    if (client && client.connected()) {
       client.write("ok");
       if (client.available()) {
         unsigned long startMillis = millis();  // Store the start time
         if (client.read(header, 2) == 2) {
           frame_size = header[0] | (header[1] << 8);
+
+          // Check buffer size
+          if (frame_size > sizeof(image_buf)) {
+            Serial.println("Frame size exceeds buffer capacity");
+            continue; // Skip this frame
+          }
 
           idx = 0;
           while (idx < frame_size) {
@@ -151,31 +159,32 @@ void decodeImage(void* param) {
             }
           }
 
-          // Verify frame end marker
-          if (idx == frame_size && image_buf[frame_size - 3] == 0xAA && image_buf[frame_size - 2] == 0xBB && image_buf[frame_size - 1] == 0xCC) {
-            // Display the image
-            TJpgDec.drawJpg(0, 0, image_buf, idx - 3);
+          // Verify frame Display the image
+          if (idx == frame_size) {
+            TJpgDec.drawJpg(0, 0, image_buf, idx);
           }
         }
       }
     }
-    esp_task_wdt_reset();
+    // esp_task_wdt_reset();
     vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
 
+// get BLE wifi
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
   void onResult(BLEAdvertisedDevice advertisedDevice) {
     String deviceName = advertisedDevice.getName().c_str();
     String deviceAddress = advertisedDevice.getAddress().toString().c_str();
 
-    String targetName = "ESP32_BLE";
-    String targetAddress = "34:85:18:45:fe:e1";
+    // String targetName = "ESP32_BLE";
+    String targetAddress = "d8:16:ad:c5:7d:29";
 
     if (deviceAddress == targetAddress) {
       Serial.print("Filtered Device: ");
       Serial.print("Name: ");
       Serial.print(deviceName);
+      
       Serial.print(", Address: ");
       Serial.println(deviceAddress);
 
@@ -198,6 +207,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
   }
 };
 
+// network and display info
 void networking(void* param) {
   // get MAC
   String mac = WiFi.macAddress();
@@ -272,7 +282,7 @@ void networking(void* param) {
 
   M5.Lcd.setCursor(0, 220);
   M5.Lcd.printf("Start the ayServer...");
-  xTaskCreatePinnedToCore(decodeImage, "ImageDecoder", 30720, NULL, 1, &decodeImageTaskHandle, 0);
+  xTaskCreatePinnedToCore(decodeImage, "ImageDecoder", 30720, NULL, 6, &decodeImageTaskHandle, 0);
 
   M5.Lcd.setCursor(0, 220);
   M5.Lcd.printf("                             ");
@@ -329,6 +339,7 @@ void networking(void* param) {
   }
 }
 
+// shake shake Lcd wakeup
 void shake(void* param) {
   float accX = 0.0F;
   float accY = 0.0F;
@@ -348,12 +359,14 @@ void shake(void* param) {
   }
 }
 
+// setup
 void setup() {
   M5.begin(true, false, true, false, kMBusModeOutput, false);
   M5.Rtc.begin();
+  M5.IMU.Init();
+
   M5.Axp.SetLcdVoltage(2900);
   M5.Lcd.fillScreen(0x512f);
-  M5.IMU.Init();
 
   EEPROM.begin(EEPROM_SIZE);
   
@@ -362,10 +375,11 @@ void setup() {
   TJpgDec.setSwapBytes(false);
   TJpgDec.setCallback(tft_output);
 
-  xTaskCreatePinnedToCore(networking, "Networking", 4096, NULL, 2, &networkingTaskHandle, tskNO_AFFINITY); //tskNO_AFFINITY
-  xTaskCreatePinnedToCore(shake, "Shake", 4096, NULL, 2, &shakeTaskHandle, tskNO_AFFINITY);
+  xTaskCreatePinnedToCore(networking, "Networking", 4096, NULL, 6, &networkingTaskHandle, tskNO_AFFINITY); //tskNO_AFFINITY
+  xTaskCreatePinnedToCore(shake, "Shake", 4096, NULL, 6, &shakeTaskHandle, tskNO_AFFINITY);
 }
 
+// debug
 #ifdef MY_DEBUG
   void printStackUsage(TaskHandle_t taskHandle, const char* taskName) {
       UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(taskHandle);
@@ -388,5 +402,5 @@ void setup() {
     vTaskDelay(2000 / portTICK_PERIOD_MS); 
   }
   #else
-  void loop() {vTaskSuspend(NULL);} // Suspend the loop task
+  void loop() {vTaskDelay(2000 / portTICK_PERIOD_MS);} // Suspend the loop task
 #endif
