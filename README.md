@@ -2,7 +2,13 @@
 
 We are team Athena‐yellow!
 
+Our wiki <https://github.com/shizhan1109/Athena-yellow/wiki/Index>
+
 Our team members: Zhan Shi, Huantao Li
+
+48323626, Zhan Shi 
+
+46435244, Huantao Li
 
 This is our timeline.
 
