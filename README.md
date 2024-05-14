@@ -19,6 +19,11 @@ This is our timeline.
 | week11 | Data                               |
 | week12 | Data                               |
 
+## Devices
+
+- 9 m5stack core2
+- 1 nRF52840 DK(blue board)
+- 1 server on PC
 
 ## KPIs
 
