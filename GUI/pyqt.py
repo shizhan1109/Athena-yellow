@@ -18,7 +18,8 @@ import serial.tools.list_ports
 
 from zeroconf import ServiceBrowser, Zeroconf
 
-from capture_screen_tcp_client_qt import ScreenCaptureThread
+from capture_screen_tcp_client_qt import ScreenCaptureProcess
+import multiprocessing
 
 global_devices = []
 is_screen = False
@@ -224,20 +225,32 @@ class DisplayWidget(QFrame):
             {'name': 'M5AY-7821848DDCEC', 'addresses': '192.168.31.23', 'port': 40111}
         ]
         servers = global_devices
-        self.screen_capture_thread = ScreenCaptureThread(servers)
-        self.screen_capture_thread.connection_error.connect(self.handle_error)
-        self.screen_capture_thread.start()
+        # 创建错误处理队列
+        self.error_queue = multiprocessing.Queue()
+        # 实例化进程
+        self.screen_capture_process = ScreenCaptureProcess(servers, self.error_queue)
+        # 启动进程
+        self.screen_capture_process.start()
 
     @Slot()
     def stop_capturing(self):
-        if self.screen_capture_thread is not None:
-            self.screen_capture_thread.stop()
-            self.screen_capture_thread.wait()
-            self.screen_capture_thread = None
+        if self.screen_capture_process is not None:
+            self.screen_capture_process.stop()
+            self.screen_capture_process.join(timeout=5)
 
-    @Slot(str)
-    def handle_error(self, error_message):
-        print(f"Connection Error: {error_message}")
+            if self.screen_capture_process.is_alive():
+                print("Process did not terminate in time. Terminating forcefully.")
+                self.screen_capture_process.terminate()
+            
+            self.screen_capture_process.join()
+            
+            self.screen_capture_process = None
+            self.check_errors()
+
+    def check_errors(self):
+        while not self.error_queue.empty():
+            error_message = self.error_queue.get()
+            print(f"Connection Error: {error_message}")
 
 class NetworkingWidget(QFrame):
     def __init__(self, text: str, parent=None):
@@ -349,7 +362,7 @@ class NetworkingWidget(QFrame):
         try:
             ser = serial.Serial(port, baudrate=115200, timeout=1)
 
-            command = f"bwifi {ssid} {password}\n"
+            command = f"wifi {ssid}-{password}\r\n"
             ser.write(command.encode())
         except Exception as e:
             print(f'Error: {e}')
@@ -426,21 +439,22 @@ class NetworkingWidget(QFrame):
             duration=2000,
             parent=self
         )
-        # 使用 QTimer 延迟5s
-        QTimer.singleShot(300, self.search_devices)  # 100毫秒后执行
+
+        self.zeroconf = Zeroconf()
+        self.listener = MyListener()
+        browser = ServiceBrowser(self.zeroconf, "_ayServer._tcp.local.", self.listener)
+        QTimer.singleShot(10000, self.process_devices)
     
-    def search_devices(self):
-        zeroconf = Zeroconf()
-        listener = MyListener()
-        browser = ServiceBrowser(zeroconf, "_ayServer._tcp.local.", listener)
-        time.sleep(5)
-        self.devices = listener.get_devices().copy()
+    def process_devices(self):
+        self.devices = self.listener.get_devices().copy()
         self.devices = sorted(self.devices, key=lambda x: x['name'])
         global global_devices
         global_devices = self.devices
-        zeroconf.close()
+        self.zeroconf.close()
 
-        devices_str_list = ['Node A', 'Node B', 'Node C', 'Node D', 'Node E', 'Node F', 'Node G', 'Node H', 'Node I']
+        devices_str_list = ['Node A', 'Node B', 'Node C', 
+                            'Node D', 'Node E', 'Node F', 
+                            'Node G', 'Node H', 'Node I']
         for i, device in enumerate(self.devices):
             if i >= len(devices_str_list):
                 break
