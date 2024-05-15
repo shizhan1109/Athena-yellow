@@ -6,18 +6,23 @@ Our wiki <https://github.com/shizhan1109/Athena-yellow/wiki/Index>
 
 Our team members: Zhan Shi, Huantao Li
 
-48323626, Zhan Shi 
 
-46435244, Huantao Li
+## Scenario Description
 
-This is our timeline.
+## Team Member List and Roles
 
-| time   | progress                           |
-| ------ | ---------------------------------- |
-| week9  | show image,   auto wifi connecting |
-| week10 | MQTT ip addr, TCP trans one display sever, TCP trans one display client, display sjpg, show ip ,connect wifi    |
-| week11 | Data                               |
-| week12 | Data                               |
+48323626, Zhan Shi : Develop the blue board software, set the bluetooth communication protocol.
+
+46435244, Huantao Li : Develop the m5 board software, GUI and sensor function.
+
+## This is our timeline.
+
+| time   | progress                                                                          |
+| ------ | --------------------------------------------------------------------------------- |
+| week9  | Show image and animation on one display                                           |
+| week10 | Use TCP trans from client to sever(display), Show ip on display, Connect to Wi-Fi |
+| week11 | Show image and screen casting on 9 displays                                       |
+| week12 | Fixing bugs and preparing demo                                                    |
 
 ## Devices
 
@@ -28,11 +33,12 @@ This is our timeline.
 ## KPIs
 
 - **MotionTracking sensor**. Shaking on, shaking off. A fast way to switch on and off screen.
-- **Performance**. High resolution, 960x720 pixels, and low display latency.
-- **Apply MQTT**. Translate image from website to displays through MQTT.
-- **Auto wifi connecting**. Connect wifi without inputting password,even for a encrypt wifi.
-- **Fancy web dashboard**. Using tool Streamlit. Synchronize with uploaded image from websit.
-- **Computer vision**. Integrate image processing technic like image filtering and edge detection.
+- **Performance**. FPS > 1 which is low because compromises for the sake of time synchronization.
+- **Auto wifi connecting**. Bluetooth advertising Wi-Fi information. No need input or fix configuration.
+- **GUI**. Synchronized display 9 screens states.
+- **Computer vision**. Integrate image processing technic like image filtering and edge detection.(planed but not done)
+- **More than image**: We achieve screen casting.
+
 
 
 ## DIKW
