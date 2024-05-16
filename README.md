@@ -15,6 +15,8 @@ Our team members: Zhan Shi, Huantao Li
 
 46435244, Huantao Li : Develop the m5 board software, GUI and sensor function.
 
+Our Team photo:
+
 ## This is our timeline.
 
 | time   | progress                                                                          |
@@ -53,22 +55,28 @@ Our team members: Zhan Shi, Huantao Li
 
 ![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/d0887cef-a5d9-4bf3-aaae-53077e5ac711)
 
+## Deploy
+
+**Initialize**
+
+1. FLash the 9 m5core2s,
+2. Connect WiFi lihongtao.
+
+**Reach network**
+
+1. Push reset button. M5core2s shows *waiting for Wi-Fi*. In the GUI, all the M5 icons turn red.
+2. Input Wi-Fi configuration `wifi csse4011demo-csse4011` in the blue board. The blue board will advertising configuration.
+3. The M5core2s connect to the new Wi-Fi, and show SSID, mac addr and IP on display. 
+4. The M5core2s register IP to router, the GUI collects 9 IPs through mDNS protocol. In the GUI, click **search** button, the connected m5core2s' icons turn green. Place the m5 to the corresponding location.
+
+**Let's play**
+
+7. In the GUI, click **run**, start screen casting.
+8. Show one image in 9 displays. Shake it to turn on/off display. The 9 displays synchronize by NTP server.
+9. Play an animation and even a video.
 
 
-
-## Team member’s involvement
-
-Zhan Shi:
-
-Huantao Li:
-
-Our Team photo:
-
-
-
-
-
-## logging
+## Logging
 
 <https://docs.zephyrproject.org/latest/boards/m5stack/m5stack_core2/doc/index.html>
 
