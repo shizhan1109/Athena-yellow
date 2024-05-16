@@ -54,7 +54,8 @@ Our Team photo:
 
 ## Network
 
-![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/d0887cef-a5d9-4bf3-aaae-53077e5ac711)
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/8670f2df-11c8-4128-be67-93b0e6b9c85e)
+
 
 ## Deploy
 
