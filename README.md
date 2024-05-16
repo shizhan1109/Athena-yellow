@@ -11,9 +11,9 @@ Our team members: Zhan Shi, Huantao Li
 
 ## Team Member List and Roles
 
-48323626, Zhan Shi : Develop the blue board software, set the bluetooth communication protocol.
+48323626, Zhan Shi : Develop the blue board software. Set up the Bluetooth communication protocol. Coordinate software development tasks. Spearheaded the development of software for the M5 board using zephyr.
 
-46435244, Huantao Li : Develop the m5 board software, GUI and sensor function.
+46435244, Huantao Li : Develop the m5 board software. Implement GUI features. Integrate sensor functionalities. Modify the overall design when developing m5 by zephyr. Test and debug the m5 board.
 
 Our Team photo:
 
