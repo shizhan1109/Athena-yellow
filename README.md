@@ -77,6 +77,15 @@ Our Team photo:
 8. Show one image in 9 displays. Shake it to turn on/off display. The 9 displays synchronize by NTP server.
 9. Play an animation and even a video.
 
+## Sensor
+
+MotionTracking MPU-6886
+
+We utilize gravity accelerometers along the X, Y, and Z axes! Any axe changes will trun on/off display.
+
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/649c4ccb-1c05-4762-be15-e990ea7cf896)
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/390f1c4b-f714-478d-89f5-aba7e5102c82)
+
 
 ## Logging
 
