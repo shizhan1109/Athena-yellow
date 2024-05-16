@@ -30,7 +30,7 @@ Our Team photo:
 
 - 9 m5stack core2
 - 1 nRF52840 DK(blue board)
-- 1 server on PC
+- 1 GUI on PC
 
 ## KPIs
 
