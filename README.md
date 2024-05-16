@@ -49,7 +49,8 @@ Our Team photo:
 
 ## Overview
 
-![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/896ab853-748d-4559-9e94-0acbfc30b3e0)
+![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/856e87d5-0ac6-4b45-af45-918d94dd5734)
+
 
 ## Network
 
