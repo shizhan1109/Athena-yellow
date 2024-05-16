@@ -8,6 +8,7 @@ Our team members: Zhan Shi, Huantao Li
 
 
 ## Scenario Description
+The primary objective of Athena-yellow is to develop a highly functional and user-friendly multi-display system that seamlessly integrates hardware and software components. 
 
 ## Team Member List and Roles
 
@@ -15,7 +16,8 @@ Our team members: Zhan Shi, Huantao Li
 
 46435244, Huantao Li : Develop the m5 board software. Implement GUI features. Integrate sensor functionalities. Modify the overall design when developing m5 by zephyr. Test and debug the m5 board.
 
-Our Team photo:
+Our Team photo:![f07b50b5be926adcfd38b5b67149386](https://github.com/shizhan1109/Athena-yellow/assets/80838084/3b50257d-849e-4f5c-8f7c-9c885ae798e1)
+
 
 ## This is our timeline.
 
