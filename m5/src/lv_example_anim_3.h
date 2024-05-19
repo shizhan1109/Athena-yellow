@@ -1,1 +1,0 @@
-void lv_example_anim_3(void);

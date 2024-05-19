@@ -225,6 +225,10 @@ class DisplayWidget(QFrame):
             {'name': 'M5AY-7821848DDCEC', 'addresses': '192.168.31.23', 'port': 40111}
         ]
         servers = global_devices
+        
+        if len(servers) >= 9:
+            servers = servers[:9]
+        
         # 创建错误处理队列
         self.error_queue = multiprocessing.Queue()
         # 实例化进程

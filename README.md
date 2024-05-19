@@ -64,7 +64,7 @@ Our Team photo:![f07b50b5be926adcfd38b5b67149386](https://github.com/shizhan1109
 **Initialize**
 
 1. FLash the 9 m5core2s,
-2. Connect WiFi lihongtao.
+2. Connect WiFi lihuantao.
 
 **Reach network**
 
@@ -89,27 +89,30 @@ We utilize gravity accelerometers along the X, Y, and Z axes! Any axe changes wi
 ![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/390f1c4b-f714-478d-89f5-aba7e5102c82)
 
 
-## Logging
+## Build this project
 
+### m5_zephyr (abandon)
 <https://docs.zephyrproject.org/latest/boards/m5stack/m5stack_core2/doc/index.html>
-
-west build -b m5stack_core2/esp32/procpu zephyr/samples/hello_world -p
+<https://github.com/IlievIliya92/esp32_zephyr>
 
 west config build.board m5stack_core2/esp32/procpu
-west build zephyr/samples/hello_world
-west build zephyr/samples/subsys/display/lvgl
-west build zephyr/samples/sensor/mpu6050 -- -DSHIELD=m5stack_core2_ext
-west build Athena-yellow/m5
-
+west build m5_zephyr -p -DSSID="csse4011demo" -DPSK="csse4011"
+west flash
 west espressif monitor
 
-examples
-modules/lib/gui/lvgl/examples/widgets/img/lv_example_img_1.c
-
-LCD IPS TFT 2”, 320x240 px screen (ILI9342C)
+### m5_arduino
+- select board: M5Stack-Core2
+- flash: m5_arduino\m5_tcp_server\m5_tcp_server.ino
 
 ### blue
 west build Athena-yellow/blue --pristine
+west flash
+minicom -c on -D /dev/ttyACM0
+
+### GUI
+python3 GUI\pyqt.py
+
+## Logging
 west build zephyr/tests/bluetooth/shell --pristine
 
 minicom -c on -D /dev/ttyACM0
@@ -126,6 +129,5 @@ bt adv-data 1609637373653430313164656d6f2d6373736534303131
 bt adv-start
 
 `wifi csse4011demo-csse4011`
-
 
 rm -rf ~/cheese/Athena-yellow/.git;cp -r ~/Documents/Athena-yellow/.git ~/cheese/Athena-yellow/
