@@ -70,13 +70,13 @@ Our Team photo:![f07b50b5be926adcfd38b5b67149386](https://github.com/shizhan1109
 
 1. Push reset button. M5core2s shows *waiting for Wi-Fi*. In the GUI, all the M5 icons turn red.
 2. Input Wi-Fi configuration `wifi csse4011demo-csse4011` in the blue board. The blue board will advertising configuration.
-3. The M5core2s connect to the new Wi-Fi, and show SSID, mac addr and IP on display. 
+3. The M5core2s connect to the new Wi-Fi, and show SSID, mac addr and IP on display. The 9 displays synchronize by NTP server.
 4. The M5core2s register IP to router, the GUI collects 9 IPs through mDNS protocol. In the GUI, click **search** button, the connected m5core2s' icons turn green. Place the m5 to the corresponding location.
 
 **Let's play**
 
 7. In the GUI, click **run**, start screen casting.
-8. Show one image in 9 displays. Shake it to turn on/off display. The 9 displays synchronize by NTP server.
+8. Show one image in 9 displays. Shake it to turn on display.
 9. Play an animation and even a video.
 
 ## Sensor
@@ -95,10 +95,10 @@ We utilize gravity accelerometers along the X, Y, and Z axes! Any axe changes wi
 <https://docs.zephyrproject.org/latest/boards/m5stack/m5stack_core2/doc/index.html>
 <https://github.com/IlievIliya92/esp32_zephyr>
 
-west config build.board m5stack_core2/esp32/procpu
-west build m5_zephyr -p -DSSID="csse4011demo" -DPSK="csse4011"
-west flash
-west espressif monitor
+west config build.board m5stack_core2/esp32/procpu  
+west build m5_zephyr -p -DSSID="csse4011demo" -DPSK="csse4011"  
+west flash  
+west espressif monitor  
 
 ### m5_arduino
 - select board: M5Stack-Core2
