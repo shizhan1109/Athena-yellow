@@ -49,6 +49,25 @@ Our Team photo:![f07b50b5be926adcfd38b5b67149386](https://github.com/shizhan1109
 
 ![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/d1e2cfdc-3a25-4ee8-a864-81aba5bf2205)
 
+Data:
+Pixels: The individual points of color that make up images.
+Frames: The sequential images that create animation.
+These elements are fundamental but lack context and meaning without further processing.
+
+Information:
+Meaningful Images: Combining pixels to form recognizable images.
+Interesting Animations: Sequencing frames to create engaging visual content.
+At this stage, the system transforms raw data into a format that can convey specific messages or tell a story, making it useful for display purposes.
+
+Knowledge:
+Assembling Displays: Configuring multiple M5Core2 displays to function as a larger, cohesive display unit.
+System Synchronization: Ensuring that all screens are perfectly synchronized to provide a seamless visual experience.
+Here, the system leverages the structured information to create a unified display environment, enabling more complex applications and interactions.
+
+Wisdom:
+Cross-Screen Operation and Self-Assembled Displays:
+This includes enabling displays to function collectively, adapting dynamically to new configurations, and optimizing for user interactions and environmental conditions.
+
 ## Overview
 
 ![image](https://github.com/shizhan1109/Athena-yellow/assets/80838084/856e87d5-0ac6-4b45-af45-918d94dd5734)
